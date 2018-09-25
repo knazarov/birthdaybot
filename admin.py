@@ -1,4 +1,4 @@
-from .model import User, Role
+from .model import User, Role, Birthday, Payment, Deposit
 import flask_admin
 import flask
 import flask_security
@@ -21,7 +21,8 @@ class UserAdmin(ModelView):
     column_auto_select_related = True
 
     def is_accessible(self):
-        return flask_security.current_user.has_role('admin')
+        app = flask.current_app
+        return flask_security.current_user.id == app.config['ADMIN_ID']
 
     def scaffold_form(self):
 
@@ -38,20 +39,15 @@ class UserAdmin(ModelView):
 
 class AdminModelView(ModelView):
     def is_accessible(self):
-        return flask_security.current_user.has_role('admin')
+        app = flask.current_app
+        return flask_security.current_user.id == app.config['ADMIN_ID']
 
 
 def init_admin(app, db):
     admin = flask_admin.Admin(app, name='hiring')
 
-    admin.add_view(AdminModelView(Organization, db.session))
-    admin.add_view(AdminModelView(Position, db.session))
-    admin.add_view(AdminModelView(Candidate, db.session))
-    admin.add_view(AdminModelView(Action, db.session))
-    admin.add_view(AdminModelView(GoogleAuth, db.session))
-    admin.add_view(AdminModelView(Invitation, db.session))
     admin.add_view(UserAdmin(User, db.session))
     admin.add_view(AdminModelView(Role, db.session))
-    admin.add_view(AdminModelView(EmailSettings, db.session))
-    admin.add_view(AdminModelView(Plan, db.session))
-    admin.add_view(AdminModelView(PlanHistory, db.session))
+    admin.add_view(AdminModelView(Birthday, db.session))
+    admin.add_view(AdminModelView(Payment, db.session))
+    admin.add_view(AdminModelView(Deposit, db.session))

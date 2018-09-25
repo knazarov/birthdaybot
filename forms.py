@@ -14,3 +14,14 @@ class DepositForm(FlaskForm):
     amount = IntegerField('Amount',
                           validators=[DataRequired()])
     submit = SubmitField('Deposit')
+
+
+class PaymentForm(FlaskForm):
+    user = SelectField('User',
+                       choices=[],
+                       validators=[DataRequired()])
+
+    amount = IntegerField('Amount',
+                          validators=[DataRequired()])
+
+    submit = SubmitField('Withdraw')
