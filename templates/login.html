@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block body %}
+    <div class="container">
+
+        <div class="section">
+            <div class="row">
+                <div class="three columns">&nbsp</div>
+                <div class="six columns">
+
+        <h4 class="display-3 mb-4">Please log in with Telegram</h4>
+        <!--<script async src="https://telegram.org/js/telegram-widget.js?4" data-telegram-login="tarantool_birthday_bot" data-size="large" data-auth-url="https://birthday.knazarov.com/do_login" data-request-access="write"></script>-->
+
+        <script async src="https://telegram.org/js/telegram-widget.js?4" data-telegram-login="tarantool_birthday_bot" data-size="large" data-userpic="false" data-radius="0" data-auth-url="https://birthday.knazarov.com/do_login" data-request-access="write"></script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,33 @@
+<html>
+    <head>
+        <title>Birthdays</title>
+
+        {% assets output="gen/packed.css",
+        "css/font-awesome.min.css",
+        "css/normalize.css",
+        "css/skeleton.css",
+        "css/skeleton-tabs.css",
+        "css/custom.css",
+        "css/skeleton-fontawesome-buttons.css" %}
+            <link rel="stylesheet" href="{{ ASSET_URL }}">
+        {% endassets %}
+
+        {% assets output="gen/packed.js",
+        "js/jquery.js" %}
+            <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+        {% endassets %}
+
+        <link rel="apple-touch-icon" sizes="180x180" href="/static/images/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/static/images/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/static/images/favicon-16x16.png">
+        <link rel="manifest" href="/static/images/site.webmanifest">
+        <link rel="mask-icon" href="/static/images/safari-pinned-tab.svg" color="#5bbad5">
+        <meta name="msapplication-TileColor" content="#f0381b">
+        <meta name="theme-color" content="#ffffff">
+    </head>
+    <body class="">
+
+        {% block body %}
+        {% endblock %}
+    </body>
+</html>
