@@ -1,4 +1,4 @@
-from .model import User, Role, Birthday, Payment, Deposit
+from model import User, Role, Birthday, Payment, Deposit
 import flask_admin
 import flask
 import flask_security
@@ -22,7 +22,7 @@ class UserAdmin(ModelView):
 
     def is_accessible(self):
         app = flask.current_app
-        return flask_security.current_user.id == app.config['ADMIN_ID']
+        return flask_security.current_user.id == int(app.config['ADMIN_ID'])
 
     def scaffold_form(self):
 
@@ -40,7 +40,7 @@ class UserAdmin(ModelView):
 class AdminModelView(ModelView):
     def is_accessible(self):
         app = flask.current_app
-        return flask_security.current_user.id == app.config['ADMIN_ID']
+        return flask_security.current_user.id == int(app.config['ADMIN_ID'])
 
 
 def init_admin(app, db):

@@ -17,6 +17,7 @@ import flask_debugtoolbar
 import flask
 import flask_migrate
 import forms
+import admin
 
 app = Flask(__name__)
 read_config(app)
@@ -31,6 +32,7 @@ assets = flask_assets.Environment()
 assets.init_app(app)
 toolbar.init_app(app)
 migrate.init_app(app, db)
+admin.init_admin(app, db)
 
 # User model
 class ExtendedRegisterForm(flask_security.forms.ConfirmRegisterForm):
@@ -49,6 +51,8 @@ security._state = security.init_app(
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if not flask_security.current_user.is_authenticated:
+        # if app.config['DEBUG']:
+        #    login_user(model.User.query.get(app.config['ADMIN_ID']))
         return redirect('/login')
 
     user = flask_security.current_user
@@ -147,7 +151,6 @@ def login():
 
 if __name__ == '__main__':
     context = ('server.crt', 'server.key')
-    if app.config['DEBUG']:
-        app.run(host="0.0.0.0", port=443, debug=True, ssl_context=context)
-    else:
-        app.run(host="0.0.0.0", port=5000)
+        #app.run(host="0.0.0.0", port=443, debug=True, ssl_context=context)
+    #else:
+    app.run(host="0.0.0.0", port=5000)
