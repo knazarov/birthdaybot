@@ -7,6 +7,9 @@ def read_config(app):
         app.config.from_pyfile(os.path.join(
             os.path.dirname(app.instance_path), '.env'))
 
+    if os.getenv('BOT_TOKEN'):
+        app.config['BOT_TOKEN'] = os.getenv('BOT_TOKEN')
+
     if os.getenv('SERVER_NAME'):
         app.config['SERVER_NAME'] = os.getenv('SERVER_NAME')
 

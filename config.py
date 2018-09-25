@@ -1,5 +1,5 @@
 SECRET_KEY = "ilikerandompasswords"
-BOT_TOKEN = ""
+BOT_TOKEN = None
 DATABASE_URL = 'postgresql://postgres@localhost/postgres'
 
 SQLALCHEMY_TRACK_MODIFICATIONS = False
