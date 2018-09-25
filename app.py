@@ -129,7 +129,8 @@ def do_login():
             user.confirmed_at = datetime.datetime.now()
             db.session.add(user)
             db.session.commit()
-            login_user(user)
+
+        login_user(user)
 
         return redirect('/')
 
