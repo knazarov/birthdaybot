@@ -1,3 +1,5 @@
+from celery.schedules import crontab
+
 SECRET_KEY = "ilikerandompasswords"
 BOT_TOKEN = None
 DATABASE_URL = 'postgresql://postgres@localhost/postgres'
@@ -22,3 +24,11 @@ ADMIN_ID = ""
 
 
 CARD_NUMBERS = []
+
+
+CELERY_SCHEDULE = {
+    'weekly_stats': {
+        'task': 'nudge',
+        'schedule': crontab(hour=21, minute=0, day_of_week='*')
+    },
+}

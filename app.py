@@ -18,21 +18,44 @@ import flask
 import flask_migrate
 import forms
 import admin
+import celery as celery_lib
 
 app = Flask(__name__)
 read_config(app)
 
 init_database(app)
 
+def make_celery(app, celery):
+    celery.main = app.import_name
+    celery.conf.result_backend = app.config['CELERY_RESULT_BACKEND']
+    celery.conf.broker_url = app.config['CELERY_BROKER_URL']
+    celery.conf.beat_schedule = app.config['CELERY_SCHEDULE']
+    celery.conf.timezone = 'UTC'
+
+    class ContextTask(celery.Task):
+        def __call__(self, *args, **kwargs):
+            with app.app_context():
+                return self.run(*args, **kwargs)
+
+    celery.Task = ContextTask
+
+    app.celery = celery
+    return celery
+
+
 security = flask_security.Security()
 toolbar = flask_debugtoolbar.DebugToolbarExtension()
 migrate = flask_migrate.Migrate()
 assets = flask_assets.Environment()
+celery = celery_lib.Celery()
 
 assets.init_app(app)
 toolbar.init_app(app)
 migrate.init_app(app, db)
 admin.init_admin(app, db)
+make_celery(app, celery)
+
+import tasks
 
 # User model
 class ExtendedRegisterForm(flask_security.forms.ConfirmRegisterForm):
@@ -71,6 +94,9 @@ def index():
         user.deposits.append(deposit)
         db.session.add(deposit)
         db.session.commit()
+
+        tasks.fill_balance.delay(user.id, int(amount))
+
         return flask.redirect(flask.url_for(
             'index'))
 

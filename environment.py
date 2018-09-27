@@ -26,8 +26,11 @@ def read_config(app):
         app.config['SQLALCHEMY_DATABASE_URI'] = app.config['DATABASE_URL']
 
     if os.getenv('REDIS_URL'):
-        app.config['CELERY_BROKER_URL'] = os.getenv('REDIS_URL')
-        app.config['CELERY_RESULT_BACKEND'] = os.getenv('REDIS_URL')
+        app.config['REDIS_URL'] = os.getenv('REDIS_URL')
+
+    if app.config.get('REDIS_URL', None):
+        app.config['CELERY_BROKER_URL'] = app.config['REDIS_URL']
+        app.config['CELERY_RESULT_BACKEND'] = app.config['REDIS_URL']
 
     if os.getenv('MAIL_PASSWORD'):
         app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')

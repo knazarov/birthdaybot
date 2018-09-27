@@ -44,7 +44,7 @@ class AdminModelView(ModelView):
 
 
 def init_admin(app, db):
-    admin = flask_admin.Admin(app, name='hiring')
+    admin = flask_admin.Admin(app, name='birthday')
 
     admin.add_view(UserAdmin(User, db.session))
     admin.add_view(AdminModelView(Role, db.session))
