@@ -140,7 +140,7 @@ def pay():
         db.session.add(birthday)
 
         num_users = int(len(users))
-        individual_payment = birthday.amount / num_users
+        individual_payment = int(birthday.amount / num_users)
 
         for user in users:
             payment = model.Payment()
