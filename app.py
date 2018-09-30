@@ -75,7 +75,7 @@ security._state = security.init_app(
 def index():
     if not flask_security.current_user.is_authenticated:
         # if app.config['DEBUG']:
-        #    login_user(model.User.query.get(app.config['ADMIN_ID']))
+        #     login_user(model.User.query.get(app.config['ADMIN_ID']))
         return redirect('/login')
 
     user = flask_security.current_user
@@ -101,6 +101,63 @@ def index():
             'index'))
 
     return render_template('index.html', form=form, cards=cards)
+
+
+@app.route('/pay', methods=['GET', 'POST'])
+def pay():
+    if not flask_security.current_user.id == int(app.config['ADMIN_ID']):
+        flask.abort(404)
+
+    if not flask_security.current_user.is_authenticated:
+        return redirect('/login')
+
+    users = (model.User.query
+             .filter(model.User.participates == True)).all()
+
+    users_choices = []
+    for u in users:
+        users_choices.append((str(u.id),
+                              ("%s %s" % (str(u.first_name), str(u.last_name)))))
+
+    print(users_choices)
+
+    form = forms.PaymentForm()
+    form.user.choices = users_choices
+
+    if form.validate_on_submit():
+        user_id = int(form.user.data)
+
+        users = (model.User.query
+                 .filter(model.User.participates == True)
+                 .filter(model.User.id != user_id)).all()
+
+        amount = form.amount.data
+
+        birthday = model.Birthday()
+        birthday.amount = int(amount)
+        birthday.user_id = user_id
+        birthday.gift = form.gift.data
+        db.session.add(birthday)
+
+        num_users = int(len(users))
+        individual_payment = birthday.amount / num_users
+
+        for user in users:
+            payment = model.Payment()
+            payment.amount = individual_payment
+            payment.birthday = birthday
+            payment.user = user
+            db.session.add(payment)
+
+        db.session.commit()
+
+        for user in users:
+            tasks.pay.delay(user.id, int(individual_payment), user_id)
+
+        return flask.redirect(flask.url_for(
+            'pay'))
+
+    return render_template('pay.html', form=form)
 
 
 @app.route('/dashboard')

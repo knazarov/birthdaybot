@@ -19,6 +19,12 @@ class UserAdmin(ModelView):
     column_exclude_list = list = ('password',)
     form_excluded_columns = ('password',)
     column_auto_select_related = True
+    column_list = ('first_name',
+                   'last_name',
+                   'birthday',
+                   'balance',
+                   'deposit_sum',
+                   'payment_sum')
 
     def is_accessible(self):
         app = flask.current_app
@@ -41,6 +47,10 @@ class AdminModelView(ModelView):
     def is_accessible(self):
         app = flask.current_app
         return flask_security.current_user.id == int(app.config['ADMIN_ID'])
+
+
+class UserModelView(AdminModelView):
+    column_list = ('balance')
 
 
 def init_admin(app, db):

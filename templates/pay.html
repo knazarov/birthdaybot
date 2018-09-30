@@ -11,17 +11,12 @@
                     <div class="panel">
 
                         <h4 class="display-3 mb-4">Hi {{current_user.first_name}}</h4>
-                        <p>Your balance is {{current_user.balance}} rub.</p>
-                        <p>To deposit money, make a transfer to one of the cards below and then enter the sum you've transfered and press "Deposit"</p>
+                        <p>Here you can withdraw funds for a birthday</p>
 
-                        <ul>
-                            {% for card in cards %}
-                                <li>{{card}}</li>
-                            {% endfor %}
-                        </ul>
-
-                        <form action="{{url_for('index')}}" method="POST" name="form" enctype="multipart/form-data">
+                        <form action="{{url_for('pay')}}" method="POST" name="form" enctype="multipart/form-data">
                             {{ form.hidden_tag() }}
+                            {{ render_field(form.user, class="u-full-width") }}
+                            {{ render_field(form.gift, class="u-full-width") }}
                             {{ render_field(form.amount, class="u-full-width") }}
                             {{ form.submit(class="button-primary") }}
                         </form>

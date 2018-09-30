@@ -37,7 +37,7 @@ class User(db.Model, flask_security.UserMixin):
     birthday = Column(Date)
 
     def __str__(self):
-        return '<User id=%s name=%s, balance=%s>' % (self.id, self.first_name, self.balance())
+        return '<User id=%s name=%s, balance=%s>' % (self.id, self.first_name, self.balance)
 
     participates = Column(Boolean(), default=True, nullable=False)
 
@@ -50,6 +50,7 @@ class User(db.Model, flask_security.UserMixin):
         print("agg:", sa.func.sum(Deposit.amount))
         return sa.func.sum(Deposit.amount)
 
+    @property
     def balance(self):
         print("Deposit: ", self.deposit_sum)
         deposit = self.deposit_sum or 0
@@ -74,6 +75,11 @@ class Payment(db.Model):
     user = relation("User",
                     backref="payments",
                     foreign_keys=[user_id])
+    birthday_id = Column(Integer, ForeignKey('birthday.id'), nullable=False)
+    birthday = relation("Birthday",
+                        backref="participations",
+                        foreign_keys=[birthday_id])
+
     amount = Column(Numeric())
 
 

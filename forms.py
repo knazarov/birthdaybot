@@ -24,4 +24,7 @@ class PaymentForm(FlaskForm):
     amount = IntegerField('Amount',
                           validators=[DataRequired()])
 
+    gift = StringField('Gift',
+                       widget=TextArea())
+
     submit = SubmitField('Withdraw')
