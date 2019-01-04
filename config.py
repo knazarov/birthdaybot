@@ -29,10 +29,10 @@ CARD_NUMBERS = []
 CELERY_SCHEDULE = {
     'weekly_stats': {
         'task': 'nudge',
-        'schedule': crontab(hour=21, minute=0, day_of_week='*')
+        'schedule': crontab(hour=19, minute=0, day_of_week='*')
     },
     'birthday_notification': {
         'task': 'find_birthdays',
-        'schedule': crontab(hour=9, minute=0, day_of_week='*')
+        'schedule': crontab(hour=6, minute=0, day_of_week='*')
     },
 }
