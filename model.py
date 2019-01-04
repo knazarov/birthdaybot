@@ -29,6 +29,7 @@ class User(db.Model, flask_security.UserMixin):
     first_name = Column(String(255))
     last_name = Column(String(255))
     username = Column(String(255))
+    phone = Column(String(255))
 
     password = Column(String(255))
     active = Column(Boolean())

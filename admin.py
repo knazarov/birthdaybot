@@ -21,6 +21,7 @@ class UserAdmin(ModelView):
     column_auto_select_related = True
     column_list = ('first_name',
                    'last_name',
+                   'phone',
                    'birthday',
                    'approved',
                    'participates',
