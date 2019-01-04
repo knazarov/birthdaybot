@@ -21,7 +21,7 @@ SECURITY_LOGIN_URL = "/security_login"
 DEBUG_TB_INTERCEPT_REDIRECTS = False
 
 ADMIN_ID = ""
-
+BUDGET = "10000"
 
 CARD_NUMBERS = []
 
@@ -30,5 +30,9 @@ CELERY_SCHEDULE = {
     'weekly_stats': {
         'task': 'nudge',
         'schedule': crontab(hour=21, minute=0, day_of_week='*')
+    },
+    'birthday_notification': {
+        'task': 'find_birthdays',
+        'schedule': crontab(hour=9, minute=0, day_of_week='*')
     },
 }

@@ -105,14 +105,13 @@ def index():
 
 @app.route('/pay', methods=['GET', 'POST'])
 def pay():
-    if not flask_security.current_user.id == int(app.config['ADMIN_ID']):
-        flask.abort(404)
-
     if not flask_security.current_user.is_authenticated:
         return redirect('/login')
 
-    users = (model.User.query
-             .filter(model.User.participates == True)).all()
+    if not flask_security.current_user.id == int(app.config['ADMIN_ID']):
+        flask.abort(404)
+
+    users = model.get_users()
 
     users_choices = []
     for u in users:
@@ -128,6 +127,7 @@ def pay():
         user_id = int(form.user.data)
 
         users = (model.User.query
+                 .filter(model.User.approved == True)
                  .filter(model.User.participates == True)
                  .filter(model.User.id != user_id)).all()
 
@@ -152,7 +152,7 @@ def pay():
         db.session.commit()
 
         for user in users:
-            tasks.pay.delay(user.id, int(individual_payment), user_id)
+            tasks.pay.delay(user.id, int(individual_payment), user_id, birthday.gift)
 
         return flask.redirect(flask.url_for(
             'pay'))
@@ -216,6 +216,9 @@ def do_login():
             user.confirmed_at = datetime.datetime.now()
             db.session.add(user)
             db.session.commit()
+
+            # Notify admins that there is a new user
+            tasks.need_approval.delay(user.id)
 
         login_user(user)
 

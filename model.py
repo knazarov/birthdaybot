@@ -7,6 +7,7 @@ from sqlalchemy.sql import union
 from sqlalchemy_utils import aggregated
 import sqlalchemy as sa
 import flask_security
+import flask
 
 roles_users = db.Table(
     'roles_users',
@@ -34,12 +35,27 @@ class User(db.Model, flask_security.UserMixin):
     confirmed_at = Column(DateTime())
     roles = relation('Role', secondary=roles_users,
                      backref=backref('users', lazy='dynamic'))
+    approved = Column(Boolean(), nullable=False)
+
     birthday = Column(Date)
 
+    def full_name(self):
+        name = []
+
+        if self.first_name:
+            name.append(self.first_name)
+
+        if self.last_name:
+            name.append(self.last_name)
+
+        return ' '.join(name)
+
+
     def __str__(self):
-        return '<User id=%s name=%s, balance=%s>' % (self.id, self.first_name, self.balance)
+        return '<User id=%s name=%s, balance=%s>' % (self.id, self.full_name(), self.balance)
 
     participates = Column(Boolean(), default=True, nullable=False)
+    celebrates = Column(Boolean(), default=True, nullable=False)
 
     @aggregated('payments', Column(Numeric))
     def payment_sum(self):
@@ -47,12 +63,11 @@ class User(db.Model, flask_security.UserMixin):
 
     @aggregated('deposits', Column(Numeric))
     def deposit_sum(self):
-        print("agg:", sa.func.sum(Deposit.amount))
+        #print("agg:", sa.func.sum(Deposit.amount))
         return sa.func.sum(Deposit.amount)
 
     @property
     def balance(self):
-        print("Deposit: ", self.deposit_sum)
         deposit = self.deposit_sum or 0
         payment = self.payment_sum or 0
         return deposit - payment
@@ -90,3 +105,45 @@ class Deposit(db.Model):
                     backref="deposits",
                     foreign_keys=[user_id])
     amount = Column(Numeric())
+
+
+def get_users():
+    q = (User.query
+         .filter(User.approved == True)
+         .filter(User.participates == True))
+
+    return q.all()
+
+
+def get_celebrating():
+    q = (User.query
+         .filter(User.approved == True)
+         .filter(User.participates == True)
+         .filter(User.celebrates == True))
+
+    return q.all()
+
+
+def is_authorized(user_id):
+    app = flask.current_app
+    admin_id = int(app.config["ADMIN_ID"])
+
+    if user_id == admin_id:
+        return True
+
+    user = User.query.get(user_id)
+
+    if user is None:
+        return False
+
+    if not user.approved:
+        return False
+
+    return True
+
+
+def is_admin(user_id):
+    app = flask.current_app
+    admin_id = int(app.config["ADMIN_ID"])
+
+    return user_id == admin_id

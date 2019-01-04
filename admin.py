@@ -22,6 +22,9 @@ class UserAdmin(ModelView):
     column_list = ('first_name',
                    'last_name',
                    'birthday',
+                   'approved',
+                   'participates',
+                   'celebrates',
                    'balance',
                    'deposit_sum',
                    'payment_sum')
