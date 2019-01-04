@@ -35,4 +35,8 @@ CELERY_SCHEDULE = {
         'task': 'find_birthdays',
         'schedule': crontab(hour=6, minute=0, day_of_week='*')
     },
+    'incomplete_accounts': {
+        'task': 'find_incomplete_accounts',
+        'schedule': crontab(hour=19, minute=10, day_of_week='*')
+    },
 }

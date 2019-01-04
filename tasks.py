@@ -180,3 +180,11 @@ def find_birthdays():
 
         if days in [14, 7, 1]:
             notify_all_about_birthday.delay(user.id, days)
+
+
+
+@app.celery.task(name='find_incomplete_accounts')
+def find_incomplete_accounts():
+    for user in get_users():
+        if user.birthday is None or user.phone is None:
+            message_admin("User %s has incomplete accounts." % user.full_name())
