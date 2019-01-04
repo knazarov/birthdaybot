@@ -8,6 +8,7 @@ from sqlalchemy_utils import aggregated
 import sqlalchemy as sa
 import flask_security
 import flask
+import datetime
 
 roles_users = db.Table(
     'roles_users',
@@ -97,6 +98,8 @@ class Payment(db.Model):
                         foreign_keys=[birthday_id])
 
     amount = Column(Numeric())
+    timestamp = Column(DateTime, default=datetime.datetime.utcnow)
+
 
 
 class Deposit(db.Model):
@@ -106,6 +109,8 @@ class Deposit(db.Model):
                     backref="deposits",
                     foreign_keys=[user_id])
     amount = Column(Numeric())
+    timestamp = Column(DateTime, default=datetime.datetime.utcnow)
+
 
 
 def get_users():
