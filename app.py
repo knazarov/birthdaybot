@@ -90,7 +90,8 @@ def index():
 
         deposit = model.Deposit()
         deposit.amount = int(amount)
-        print("amount: ", amount)
+        deposit.timestamp = datetime.datetime.utcnow()
+
         user.deposits.append(deposit)
         db.session.add(deposit)
         db.session.commit()
@@ -147,6 +148,7 @@ def pay():
             payment.amount = individual_payment
             payment.birthday = birthday
             payment.user = user
+            payment.timestamp = datetime.datetime.utcnow()
             db.session.add(payment)
 
         db.session.commit()

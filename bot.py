@@ -39,6 +39,8 @@ def deposit(user, params):
 
     deposit = model.Deposit()
     deposit.amount = amount
+    deposit.timestamp = datetime.datetime.utcnow()
+
     user.deposits.append(deposit)
     db.session.add(deposit)
     db.session.commit()
