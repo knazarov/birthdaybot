@@ -254,7 +254,6 @@ def get_birthdays():
         birthday = user.birthday
 
         if birthday is None:
-            message_admin("User %s has no birthday set" % user)
             continue
 
         birthday = birthday.replace(year=now.year)
