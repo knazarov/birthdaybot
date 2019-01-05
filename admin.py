@@ -26,6 +26,7 @@ class UserAdmin(ModelView):
                    'approved',
                    'participates',
                    'celebrates',
+                   'chats',
                    'balance',
                    'deposit_sum',
                    'payment_sum')
