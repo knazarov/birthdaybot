@@ -16,6 +16,14 @@ def read_config(app):
     if os.getenv('BIRTHDAY_TOKEN'):
         app.config['BIRTHDAY_TOKEN'] = os.getenv('BIRTHDAY_TOKEN')
 
+    if os.getenv('CARD_NUMBERS'):
+        app.config['CARD_NUMBERS'] = os.getenv('CARD_NUMBERS')
+
+    app.config['CARD_NUMBERS'] = app.config['CARD_NUMBERS'].split(",")
+
+    if os.getenv('ADMIN_ID'):
+        app.config['ADMIN_ID'] = os.getenv('ADMIN_ID')
+
     if os.getenv('PREFERRED_URL_SCHEME'):
         app.config['PREFERRED_URL_SCHEME'] = os.getenv('PREFERRED_URL_SCHEME')
 
@@ -37,21 +45,6 @@ def read_config(app):
 
     if os.getenv('MAIL_PASSWORD'):
         app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
-
-    if os.getenv('S3_URL'):
-        app.config['S3_URL'] = os.environ.get('S3_URL')
-
-    if os.getenv('S3_ACCESS_KEY'):
-        app.config['S3_ACCESS_KEY'] = os.environ.get('S3_ACCESS_KEY')
-
-    if os.getenv('S3_SECRET_KEY'):
-        app.config['S3_SECRET_KEY'] = os.environ.get('S3_SECRET_KEY')
-
-    if os.getenv('S3_BUCKET'):
-        app.config['S3_BUCKET'] = os.environ.get('S3_BUCKET')
-
-    if os.getenv('S3_REGION'):
-        app.config['S3_REGION'] = os.environ.get('S3_REGION')
 
     if os.getenv('DEBUG'):
         app.config['DEBUG'] = os.environ.get('DEBUG') == 'True'
