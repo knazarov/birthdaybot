@@ -1,4 +1,4 @@
-Telethon
+Telethon==1.5.1
 dateparser
 flower==0.9.2
 tornado==5.1
