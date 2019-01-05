@@ -24,7 +24,7 @@ ADMIN_ID = ""
 BUDGET = "10000"
 
 CARD_NUMBERS = []
-
+BIRTHDAY_TOKEN = "ilikerandompasswords"
 
 CELERY_SCHEDULE = {
     'weekly_stats': {

@@ -58,6 +58,7 @@ class User(db.Model, flask_security.UserMixin):
 
     participates = Column(Boolean(), default=True, nullable=False)
     celebrates = Column(Boolean(), default=True, nullable=False)
+    chats = Column(Boolean(), default=True, nullable=False)
 
     @aggregated('payments', Column(Numeric))
     def payment_sum(self):
@@ -126,6 +127,14 @@ def get_celebrating():
          .filter(User.approved == True)
          .filter(User.participates == True)
          .filter(User.celebrates == True))
+
+    return q.all()
+
+def get_chatting():
+    q = (User.query
+         .filter(User.approved == True)
+         .filter(User.participates == True)
+         .filter(User.chats == True))
 
     return q.all()
 

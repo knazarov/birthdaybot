@@ -123,6 +123,26 @@ def celebrate(user, params):
     send_message(user.id, participate_text(user))
 
 
+def chat(user, params):
+    if len(params) == 0:
+        send_message(user.id, "Please specify 'true' or 'false'")
+        return
+
+    is_chat = params[0].lower()
+
+    if is_chat not in ["true", "false"]:
+        send_message(user.id, "Please specify 'true' or 'false'")
+        return
+
+    user.chats = is_chat == "true"
+    db.session.commit()
+
+    if is_chat == "true":
+        send_message(user.id, "You will be added to birthday chats")
+    else:
+        send_message(user.id, "You won't be added to birthday chats")
+
+
 def handle_command(user_id, command, params):
     if not model.is_authorized(user_id):
         send_message(user_id, "You are not authorized to send commands. Please ask server admin to authorize you.")
@@ -140,6 +160,8 @@ def handle_command(user_id, command, params):
         participate(user, params)
     elif command == "celebrate":
         celebrate(user, params)
+    elif command == "chat":
+        chat(user, params)
 
 
 def handle_update(update):

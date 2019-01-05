@@ -237,6 +237,56 @@ def login():
     return render_template('login.html')
 
 
+def get_birthday_invitees(user_id):
+    invitees = []
+    for user in model.get_chatting():
+        if user.phone is not None and user.id != user_id:
+            invitees.append(user.phone)
+    return invitees
+
+
+def get_birthdays():
+    now = datetime.datetime.now().date()
+
+    result = []
+
+    for user in model.get_celebrating():
+        birthday = user.birthday
+
+        if birthday is None:
+            message_admin("User %s has no birthday set" % user)
+            continue
+
+        birthday = birthday.replace(year=now.year)
+
+        days = (birthday-now).days
+
+        if days < 0:
+            continue
+
+        if days <= 14:
+            result.append(
+                {"id": user.id,
+                 "name": user.full_name(),
+                 "date": str(birthday),
+                 "invitees": get_birthday_invitees(user.id)}
+            )
+
+    return result
+
+
+@app.route('/birthdays')
+def birthdays():
+    token = flask.request.args.get('token', None)
+
+    if token is None:
+        flask.abort(401)
+
+    if token != app.config['BIRTHDAY_TOKEN']:
+        flask.abort(401)
+
+    return flask.jsonify(get_birthdays())
+
 if __name__ == '__main__':
     context = ('server.crt', 'server.key')
         #app.run(host="0.0.0.0", port=443, debug=True, ssl_context=context)

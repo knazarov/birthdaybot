@@ -13,6 +13,9 @@ def read_config(app):
     if os.getenv('SERVER_NAME'):
         app.config['SERVER_NAME'] = os.getenv('SERVER_NAME')
 
+    if os.getenv('BIRTHDAY_TOKEN'):
+        app.config['BIRTHDAY_TOKEN'] = os.getenv('BIRTHDAY_TOKEN')
+
     if os.getenv('PREFERRED_URL_SCHEME'):
         app.config['PREFERRED_URL_SCHEME'] = os.getenv('PREFERRED_URL_SCHEME')
 
