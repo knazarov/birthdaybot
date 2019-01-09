@@ -215,6 +215,11 @@ def do_login():
             user.last_name = tg_data["last_name"]
             user.username = tg_data["username"]
             user.active = True
+            user.approved = False
+            user.participates = True
+            user.celebrates = True
+            user.chats = True
+
             user.confirmed_at = datetime.datetime.now()
             db.session.add(user)
             db.session.commit()
